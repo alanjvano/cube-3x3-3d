@@ -16,27 +16,32 @@ class Cube():
         # define each cubie with [position, twist=0]
         self.cube = [[[9*j + i, 0] for i in range(size ** 2)] for j in range(size)]
 
-    # p: [face, dir, double]
+    # p: [face, num of rotations]
     def turn(self, p):
         if p[0] not in Cube.cycles:
             return False
         
-        # tmp copy of cube
-        tmp = copy.copy(self.cube)
-        print("tmp",tmp,'\n')
-        
-        for cycle in Cube.cycles[p[0]]:
-            print('cycle',cycle)
-            for ind, val in enumerate(cycle):
-                print(ind, val)
-                target = cycle[(ind + 1) % 4]
-                print(target)
-                self.cube[val[0]][val[1]] = tmp[target[0]][target[1]]
-        print(self.cube)
+        for i in range(p[1]):
+            
+            # tmp copy of cube
+            tmp = copy.deepcopy(self.cube)
+            
+            for cycle in Cube.cycles[p[0]]:
+                #print('cycle',cycle)
+                for ind, val in enumerate(cycle):
+                    #print(ind, val)
+                    target = cycle[(ind + 1) % 4]
+                    #print('cur',self.cube[val[0]][val[1]],'target',target,tmp[target[0]][target[1]])
+                    self.cube[val[0]][val[1]] = tmp[target[0]][target[1]]
 
         return True
+
+    # display array format of cube in shell
+    def show(self):
+        for layer in self.cube:
+            print(layer)
         
 cube1 = Cube(3)
 print(cube1.cube,'\n')
-print(Cube.cycles,'\n')
-print(cube1.turn('f'))
+cube1.turn(['f',4])
+cube1.show()
